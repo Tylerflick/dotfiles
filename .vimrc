@@ -1,17 +1,21 @@
-set nocompatible               " be iMproved
-filetype off                   " required!
+set nocompatible		" be iMproved
+filetype off			" required!
 syntax enable
+
+set background=dark		" set color scheme
 let g:solarized_termtrans = 1
-set backspace+=indent,eol,start
-set background=dark
-set number " Line numbering
-set smartindent " Auto indent
-set mouse=a " Allow mouse
 colorscheme solarized
+
+set backspace+=indent,eol,start	" fix backspace
+set number 			" line numbering
+set smartindent 		" auto indent
+set mouse=a 			" allow mousei
+
+" auto close documentation
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif
 
-" Auto-Bracketing
+" auto bracketing
 inoremap {      {}<Left>
 inoremap {<CR>  {<CR>}<Esc>O
 inoremap {     {
