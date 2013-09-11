@@ -1,3 +1,4 @@
+" Based on Google's C++ coding standards
 set expandtab
 set smartindent
 set autoindent
