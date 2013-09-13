@@ -112,7 +112,7 @@ set expandtab
 " => Key Bindings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Quick save and quit
-nmap <c-x> :x<CR>
+nmap <c-x> :x<CR>a
 imap <c-x> <ESC>:x<CR>a
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -122,6 +122,30 @@ let NERDTreeShowHidden=1
 let NERDTreeMouseMode=2
 autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
+
+function! NERDTreeQuit()
+  redir => buffersoutput
+  silent buffers
+  redir END
+"                     1BufNo  2Mods.     3File           4LineNo
+  let pattern = '^\s*\(\d\+\)\(.....\) "\(.*\)"\s\+line \(\d\+\)$'
+  let windowfound = 0
+
+  for bline in split(buffersoutput, "\n")
+    let m = matchlist(bline, pattern)
+
+    if (len(m) > 0)
+      if (m[2] =~ '..a..')
+        let windowfound = 1
+      endif
+    endif
+  endfor
+
+  if (!windowfound)
+    quitall
+  endif
+endfunction
+autocmd WinEnter * call NERDTreeQuit()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Airline
@@ -175,6 +199,8 @@ call vundle#rc()
  Bundle 'sudar/vim-arduino-syntax'
  Bundle 'scrooloose/nerdtree'
  Bundle 'scrooloose/syntastic'
+ Bundle 'jmcantrell/vim-virtualenv'
+ Bundle 'pangloss/vim-javascript'
  Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 
  filetype plugin indent on     " required!
