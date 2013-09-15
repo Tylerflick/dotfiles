@@ -169,7 +169,7 @@ highlight SyntasticWarningLine guibg=#af8700
 let g:syntastic_check_on_open=1
 let g:syntastic_enable_signs=1
 let g:syntastic_arduino_checkers=['ycm']
-let g:syntastic_python_checkers=['flake8']
+let g:syntastic_python_checkers=['pep8']
 let g:syntastic_mode_map = { 'mode' : 'active',
 			   \ 'active_filetypes' : ['c', 'cpp', 'python', 'arduino', 'javascript'] }
 
