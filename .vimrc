@@ -1,6 +1,5 @@
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Initial options
+" => Essentials
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Sets how many lines of history VIM has to remember
 set history=700
@@ -13,17 +12,6 @@ set nocompatible
 
 " Update file when modified outside of VIM
 set autoread
-
-" Turn off default mapping
-let g:vim_arduino_map_keys = 0
-
-" For powerline
-set laststatus=2
-set guifont=Droid\ Sans\ Mono\ for\ Powerline\ 9
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Show the current position
 set ruler
@@ -43,6 +31,7 @@ set lazyredraw
 
 " Show matching brackets when text indicator is over them
 set showmatch
+
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -57,24 +46,13 @@ set tm=500
 " Syntax highighting
 syntax enable
 
+" Color scheme
 set background=dark
-let g:solarized_termtrans = 1
 colorscheme solarized
+let g:solarized_termtrans = 1
 
 " Line numbering
 set number 
-
-
-""""""""""""""""""""""""""""""""""""""""""
-" Line Length Enforcements
-""""""""""""""""""""""""""""""""""""""""""
-augroup vimrc_autocmds
-    autocmd!
-    " highlight characters past column 120
-    autocmd FileType python highlight Excess ctermbg=DarkGrey guibg=Black
-    autocmd FileType python match Excess /\%120v.*/
-    autocmd FileType python set nowrap
-augroup END
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -87,9 +65,9 @@ set noswapfile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " Smart indenting
 set smartindent 
+
 " Auto indent
 set autoindent
 
@@ -109,18 +87,20 @@ set shiftwidth=4
 set expandtab
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Key Bindings
+" => Airline
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Quick save and quit
-nmap <c-x> :x<CR>a
-imap <c-x> <ESC>:x<CR>a
+set laststatus=2
+set guifont=Source\ Code\ Pro\ for\ Powerline\:h11
+let g:airline_powerline_fonts = 1
+let g:airline_theme='powerlineish'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => NERDTree
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <Leader>n <plug>NERDTreeTabsToggle<CR>
+autocmd vimenter * NERDTree
 let NERDTreeShowHidden=1
 let NERDTreeMouseMode=2
-autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
 
 function! NERDTreeQuit()
@@ -148,17 +128,11 @@ endfunction
 autocmd WinEnter * call NERDTreeQuit()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Airline
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '◀'
-let laststatus = 2
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => You Complete Me
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ycm_add_preview_to_completeopt=0
 let g:ycm_confirm_extra_conf=1
-let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_autoclose_preview_window_after_completion=0
 nnoremap <leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 highlight SyntasticErrorSign guifg=red guibg=white
@@ -171,11 +145,11 @@ let g:syntastic_enable_signs=1
 let g:syntastic_arduino_checkers=['ycm']
 let g:syntastic_python_checkers=['pep8']
 let g:syntastic_mode_map = { 'mode' : 'active',
-			   \ 'active_filetypes' : ['c', 'cpp', 'python', 'arduino', 'javascript'] }
+         \ 'active_filetypes' : ['c', 'cpp', 'go', 'python', 'arduino', 'javascript'] }
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
 " auto close documentation
 autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
@@ -191,28 +165,44 @@ inoremap {}     {}
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vundle
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
- Bundle 'gmarik/vundle'
- Bundle 'Valloric/YouCompleteMe'
- Bundle 'sudar/vim-arduino-syntax'
- Bundle 'scrooloose/nerdtree'
- Bundle 'scrooloose/syntastic'
- Bundle 'jmcantrell/vim-virtualenv'
- Bundle 'pangloss/vim-javascript'
- Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+ filetype off                  " required
 
- filetype plugin indent on     " required!
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+ Plugin 'gmarik/Vundle.vim'
+ " NERDTree
+ Plugin 'scrooloose/nerdtree'
+ Plugin 'jistr/vim-nerdtree-tabs'
+ Plugin 'scrooloose/nerdcommenter'
+ " Code completion and symantics
+ Plugin 'Valloric/YouCompleteMe'
+ Plugin 'scrooloose/syntastic'
+ " GoLang Support
+ Plugin 'nsf/gocode', {'rtp': 'vim/'}
+ Plugin 'fsouza/go.vim'
+ Plugin 'majutsushi/tagbar'
+ Plugin 'pangloss/vim-javascript'
+ Plugin 'jmcantrell/vim-virtualenv'
+ Plugin 'bling/vim-airline'
+ Plugin 'tpope/vim-surround'
+ 
+call vundle#end()
+
+filetype plugin indent on     " required!
  "
  " Brief help
- " :BundleList          - list configured bundles
- " :BundleInstall(!)    - install(update) bundles
- " :BundleSearch(!) foo - search(or refresh cache first) for foo
- " :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+ " :PluginList          - list configured bundles
+ " :PluginInstall(!)    - install(update) bundles
+ " :PluginSearch(!) foo - search(or refresh cache first) for foo
+ " :PluginClean(!)      - confirm(or auto-approve) removal of unused bundles
  "
  " see :h vundle for more details or wiki for FAQ
- " NOTE: comments after Bundle command are not allowed.
+ " NOTE: comments after Plugin command are not allowed.
  "
 " Turn filetype settings back on
 filetype plugin indent on
